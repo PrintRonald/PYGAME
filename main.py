@@ -2,17 +2,12 @@ import pygame
 import constantes
 from personaje import Personaje
 
-jugador = Personaje(50,50)
-
 
 pygame.init()
-
-
-
-run = True
 ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
-
 pygame.display.set_caption('Mi primer juego')
+jugador = Personaje(50,50)
+run = True
 
 #Definir variablesd e movimientos del jugador
 mover_arriba = False
