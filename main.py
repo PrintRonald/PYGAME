@@ -15,18 +15,19 @@ def escalar_img(image, scale):
 
 
 animaciones = []
-for i in range(7):
-    img = pygame.image.load(f"assets//images//characters//player//Player_{i}.PNG") 
+for i in range(4):
+    img = pygame.image.load(f"assets//images//characters//player1//player{i}.png") 
     img = escalar_img(img,constantes.SCALA_PERSONAJE)
     animaciones.append(img)
 
 # Creacion del personaje principal 
-#player_image = pygame.image.load("assets//images//characters//player//Player_0.PNG")
-# Tamaño del player alto y ancho
+#player_image = pygame.image.load("assets//images//characters//player1//player0.png")
+#Tamaño del player alto y ancho
 #player_image = pygame.transform.scale(player_image,(player_image.get_width()*constantes.SCALA_PERSONAJE,player_image.get_height()*constantes.SCALA_PERSONAJE))
 #player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
 
 jugador = Personaje(50,50,animaciones)
+
 run = True
 
 #Definir variables de movimientos del jugador
