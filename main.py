@@ -1,6 +1,7 @@
 import pygame 
 import constantes
 from personaje import Personaje
+from weapon import Weapon
 
 
 pygame.init()
@@ -13,22 +14,27 @@ def escalar_img(image, scale):
     nueva_image = pygame.transform.scale(image,(w*scale, h*scale))
     return nueva_image
 
-
+#Importar imagenes 
+# Creacion del personaje principal con animación
 animaciones = []
 for i in range(4):
     img = pygame.image.load(f"assets//images//characters//player1//player{i}.png") 
     img = escalar_img(img,constantes.SCALA_PERSONAJE)
     animaciones.append(img)
 
+#Arma
+imagen_pistola = pygame.image.load(f"assets//images//weapons//gun.png")
+imagen_pistola = escalar_img(imagen_pistola,constantes.SCALA_ARMA)
 # Creacion del personaje principal 
 #player_image = pygame.image.load("assets//images//characters//player1//player0.png")
 #Tamaño del player alto y ancho
 #player_image = pygame.transform.scale(player_image,(player_image.get_width()*constantes.SCALA_PERSONAJE,player_image.get_height()*constantes.SCALA_PERSONAJE))
 #player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
 
+#Crear personaje de la clase personaje
 jugador = Personaje(50,50,animaciones)
-
-run = True
+#Crear un arma de la clase weapon
+pistola = Weapon(imagen_pistola)
 
 #Definir variables de movimientos del jugador
 mover_arriba = False
@@ -40,6 +46,7 @@ mover_derecha = False
 reloj = pygame.time.Clock()
 
 # crear loop para que la ventana no se cierre
+run = True
 while run == True:
     #que vaya a 60 FPS
     reloj.tick(constantes.FPS)
@@ -60,13 +67,17 @@ while run == True:
     
     #mover al jugador
     jugador.movimiento(delta_x, delta_y)
-
+    #Actualiza el estado del jugador
     jugador.update()
 
+    #Actualiza el estado del arma
+    pistola.update(jugador)
+
+    #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
-
     jugador.dibujar(ventana)
-
+    #Dibujar el arma
+    pistola.dibujar(ventana)
     for event in pygame.event.get():
         # Para poder cerrar la ventana o salir del bucle
         if event.type == pygame.QUIT:
