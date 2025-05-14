@@ -15,7 +15,7 @@ def escalar_img(image, scale):
     return nueva_image
 
 #Importar imagenes 
-# Creacion del personaje principal con animación
+# personaje
 animaciones = []
 for i in range(4):
     img = pygame.image.load(f"assets//images//characters//player1//player{i}.png") 
@@ -25,6 +25,10 @@ for i in range(4):
 #Arma
 imagen_pistola = pygame.image.load(f"assets//images//weapons//gun.png")
 imagen_pistola = escalar_img(imagen_pistola,constantes.SCALA_ARMA)
+
+#Balas
+imagen_balas = pygame.image.load(f"assets//images//weapons//bullet.png")
+imagen_balas = escalar_img(imagen_balas,constantes.SCALA_ARMA)
 # Creacion del personaje principal 
 #player_image = pygame.image.load("assets//images//characters//player1//player0.png")
 #Tamaño del player alto y ancho
@@ -34,7 +38,9 @@ imagen_pistola = escalar_img(imagen_pistola,constantes.SCALA_ARMA)
 #Crear personaje de la clase personaje
 jugador = Personaje(50,50,animaciones)
 #Crear un arma de la clase weapon
-pistola = Weapon(imagen_pistola)
+pistola = Weapon(imagen_pistola, imagen_balas)
+#Crear un grupo de sprites (para gestionar las balas)
+grupo_balas = pygame.sprite.Group() 
 
 #Definir variables de movimientos del jugador
 mover_arriba = False
@@ -71,13 +77,21 @@ while run == True:
     jugador.update()
 
     #Actualiza el estado del arma
-    pistola.update(jugador)
+    bala = pistola.update(jugador)
+    if bala:
+        grupo_balas.add(bala)
+    for bala in grupo_balas:
+        bala.update()
+    print(grupo_balas)
 
     #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
     jugador.dibujar(ventana)
     #Dibujar el arma
     pistola.dibujar(ventana)
+    #Dibujar balas
+    for bala in grupo_balas:
+        bala.dibujar(ventana)
     for event in pygame.event.get():
         # Para poder cerrar la ventana o salir del bucle
         if event.type == pygame.QUIT:
