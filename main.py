@@ -67,16 +67,18 @@ imagen_balas = escalar_img(imagen_balas,constantes.SCALA_ARMA)
 #player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
 
 #Crear personaje de la clase personaje
-jugador = Personaje(50,50,animaciones)
+jugador = Personaje(50,50,animaciones, 100)
 #Crear un enemigo de la clase Personaje
-zoombie = Personaje(400, 300, animaciones_enemigos[0])
-zoombie1 = Personaje(200, 200, animaciones_enemigos[1])
-zoombie2 = Personaje(100, 600, animaciones_enemigos[0])
+zoombie = Personaje(400, 300, animaciones_enemigos[0], 100)
+zoombie1 = Personaje(200, 200, animaciones_enemigos[1], 100)
+zoombie2 = Personaje(100, 600, animaciones_enemigos[0], 100)
+zoombie3 = Personaje(340, 550, animaciones_enemigos[1], 100)
 #Crear una lista de enemigos
 lista_enemigos = []
 lista_enemigos.append(zoombie)
 lista_enemigos.append(zoombie1)
 lista_enemigos.append(zoombie2)
+lista_enemigos.append(zoombie3)
 #print(lista_enemigos)
 
 #Crear un arma de la clase weapon
@@ -120,12 +122,13 @@ while run == True:
     #Actualiza el estado del enemigo
     for ene in lista_enemigos:
         ene.update()
+        print(ene.energia)
     #Actualiza el estado del arma
     bala = pistola.update(jugador)
     if bala:
         grupo_balas.add(bala)
     for bala in grupo_balas:
-        bala.update()
+        bala.update(lista_enemigos)
     #print(grupo_balas)
 
     #Dibujar al jugador 
