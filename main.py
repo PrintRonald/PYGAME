@@ -32,6 +32,16 @@ pygame.display.set_caption('Mi primer juego')
 font = pygame.font.Font('assets/joystix/joystix_monospace.otf',25)
 
 #Importar imagenes 
+
+#Energía 
+
+corazon_vacio = pygame.image.load('assets//images//items//heart_empty.png').convert_alpha()
+corazon_vacio = escalar_img(corazon_vacio, constantes.SCALA_CORAZON)
+corazon_mitad = pygame.image.load('assets//images//items//heart_half.png').convert_alpha()
+corazon_mitad = escalar_img(corazon_mitad, constantes.SCALA_CORAZON)
+corazon_lleno = pygame.image.load('assets//images//items//heart_full.png').convert_alpha()
+corazon_lleno = escalar_img(corazon_lleno, constantes.SCALA_CORAZON)
+
 # personaje
 animaciones = []
 for i in range(4):
@@ -68,8 +78,20 @@ imagen_balas = escalar_img(imagen_balas,constantes.SCALA_ARMA)
 #player_image = pygame.transform.scale(player_image,(player_image.get_width()*constantes.SCALA_PERSONAJE,player_image.get_height()*constantes.SCALA_PERSONAJE))
 #player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
 
+def vida_jugador():
+    c_mitad_dibujado = False
+    for i in range(5):
+        if jugador.energia >= ((i+1)*20):
+            ventana.blit(corazon_lleno, (5+i*50,5))
+        elif jugador.energia % 20 > 0 and c_mitad_dibujado == False:
+            ventana.blit(corazon_mitad, (5+i*50,5))
+            c_mitad_dibujado = True
+        else:
+            ventana.blit(corazon_vacio, (5+i*50,5))
+        
+
 #Crear personaje de la clase personaje
-jugador = Personaje(50,50,animaciones, 100)
+jugador = Personaje(50,50,animaciones, 20)
 #Crear un enemigo de la clase Personaje
 zoombie = Personaje(400, 300, animaciones_enemigos[0], 100)
 zoombie1 = Personaje(200, 200, animaciones_enemigos[1], 100)
@@ -155,7 +177,9 @@ while run == True:
     pistola.dibujar(ventana)
     #Dibujar balas
     for bala in grupo_balas:
-        bala.dibujar(ventana)  
+        bala.dibujar(ventana) 
+    #Dibujar corazones 
+    vida_jugador()
     #Dibujar textos
     grupo_damage_text.draw(ventana)
     for event in pygame.event.get():
