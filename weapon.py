@@ -68,6 +68,8 @@ class Bullet(pygame.sprite.Sprite):
         self.delta_y = -math.sin(math.radians(self.angulo))*constantes.VELOCIDAD_BALA
     
     def update(self, lista_enemigos):
+        dano = 0
+        pos_dano = None
         self.rect.x += self.delta_x
         self.rect.y = self.rect.y + self.delta_y
 
@@ -79,10 +81,12 @@ class Bullet(pygame.sprite.Sprite):
         for enemigo in lista_enemigos:
             if enemigo.forma.colliderect(self.rect):
                 dano = 15 + random.randint(-7,7)
+                pos_dano = enemigo.forma  
                 enemigo.energia = enemigo.energia - dano
                 self.kill()
                 break
-    
+                
+        return dano, pos_dano
     
     def dibujar(self, interfaz):
         #Los parentesis para los ejes x e y

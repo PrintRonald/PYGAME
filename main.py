@@ -2,6 +2,7 @@ import pygame
 import constantes
 from personaje import Personaje
 from weapon import Weapon
+from textos import DamageText
 import os
 #Funciones
 #escalar imagen
@@ -27,7 +28,8 @@ pygame.init()
 ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
 pygame.display.set_caption('Mi primer juego')
 
-
+#Fuentes
+font = pygame.font.Font('assets/joystix/joystix_monospace.otf',25)
 
 #Importar imagenes 
 # personaje
@@ -84,7 +86,13 @@ lista_enemigos.append(zoombie3)
 #Crear un arma de la clase weapon
 pistola = Weapon(imagen_pistola, imagen_balas)
 #Crear un grupo de sprites (para gestionar las balas)
+grupo_damage_text = pygame.sprite.Group() 
 grupo_balas = pygame.sprite.Group() 
+
+# temporal y despues borrar
+#damage_text = DamageText(100, 240, '25', font, constantes.ROJO)
+#grupo_damage_text.add(damage_text)
+
 
 #Definir variables de movimientos del jugador
 mover_arriba = False
@@ -128,8 +136,14 @@ while run == True:
     if bala:
         grupo_balas.add(bala)
     for bala in grupo_balas:
-        bala.update(lista_enemigos)
+        damage, pos_damage = bala.update(lista_enemigos)
+        if damage != 0:
+            damage_text = DamageText(pos_damage.centerx, pos_damage.centery, str(damage), font, constantes.ROJO)
+            grupo_damage_text.add(damage_text)
     #print(grupo_balas)
+
+    #Actualizar daño 
+    grupo_damage_text.update()
 
     #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
@@ -141,7 +155,9 @@ while run == True:
     pistola.dibujar(ventana)
     #Dibujar balas
     for bala in grupo_balas:
-        bala.dibujar(ventana)
+        bala.dibujar(ventana)  
+    #Dibujar textos
+    grupo_damage_text.draw(ventana)
     for event in pygame.event.get():
         # Para poder cerrar la ventana o salir del bucle
         if event.type == pygame.QUIT:
