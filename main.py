@@ -3,6 +3,7 @@ import constantes
 from personaje import Personaje
 from weapon import Weapon
 from textos import DamageText
+from items import Item
 import os
 #Funciones
 #escalar imagen
@@ -78,6 +79,20 @@ imagen_balas = escalar_img(imagen_balas,constantes.SCALA_ARMA)
 #player_image = pygame.transform.scale(player_image,(player_image.get_width()*constantes.SCALA_PERSONAJE,player_image.get_height()*constantes.SCALA_PERSONAJE))
 #player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
 
+#Cargar imagenes de los items
+posion_roja = pygame.image.load("assets//images//items//potion.PNG")
+posion_roja = escalar_img(posion_roja, 0.25)
+
+#Cargar imagenes coin
+coin_images = []
+ruta_img ="assets//images//items//coin"
+num_coin_images = contar_elemento(ruta_img)
+#print(f"Numero de imagenes de monedas: {num_coin_images}")
+for i in range(num_coin_images):
+    img = pygame.image.load(f"assets//images//items//coin//coin_{i+1}.PNG")
+    img = escalar_img(img,0.25)
+    coin_images.append(img)
+
 def vida_jugador():
     c_mitad_dibujado = False
     for i in range(5):
@@ -110,6 +125,13 @@ pistola = Weapon(imagen_pistola, imagen_balas)
 #Crear un grupo de sprites (para gestionar las balas)
 grupo_damage_text = pygame.sprite.Group() 
 grupo_balas = pygame.sprite.Group() 
+grupo_items = pygame.sprite.Group()
+
+coin = Item(350,25,0,coin_images)
+potion = Item(380,55,1,[posion_roja])
+
+grupo_items.add(coin)
+grupo_items.add(potion)
 
 # temporal y despues borrar
 #damage_text = DamageText(100, 240, '25', font, constantes.ROJO)
@@ -167,10 +189,13 @@ while run == True:
     #Actualizar daño 
     grupo_damage_text.update()
 
+    #Actualizar items
+    grupo_items.update()
+
     #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
     jugador.dibujar(ventana)
-    #Dibuhar al enemigo 
+    #Dibujar al enemigo 
     for ene in lista_enemigos:
         ene.dibujar(ventana)
     #Dibujar el arma
@@ -182,6 +207,8 @@ while run == True:
     vida_jugador()
     #Dibujar textos
     grupo_damage_text.draw(ventana)
+    #Dibujar items
+    grupo_items.draw(ventana)
     for event in pygame.event.get():
         # Para poder cerrar la ventana o salir del bucle
         if event.type == pygame.QUIT:
