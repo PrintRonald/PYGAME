@@ -2,6 +2,7 @@ import pygame
 import constantes
 class Personaje():
     def __init__(self, x, y, animaciones, energia):
+        self.score = 0
         self.energia = energia
         self.vivo = True
         self.flip = False

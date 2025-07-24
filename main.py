@@ -93,6 +93,11 @@ for i in range(num_coin_images):
     img = escalar_img(img,0.25)
     coin_images.append(img)
 
+#Dibujar texto en pantalla
+def dibujar_texto(texto,fuente,color,x,y):
+    img = fuente.render(texto,True,color)
+    ventana.blit(img, (x,y)) 
+
 def vida_jugador():
     c_mitad_dibujado = False
     for i in range(5):
@@ -190,7 +195,7 @@ while run == True:
     grupo_damage_text.update()
 
     #Actualizar items
-    grupo_items.update()
+    grupo_items.update(jugador)
 
     #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
@@ -207,6 +212,7 @@ while run == True:
     vida_jugador()
     #Dibujar textos
     grupo_damage_text.draw(ventana)
+    dibujar_texto(f"Score:{jugador.score}",font,(255,255,0),600,5)
     #Dibujar items
     grupo_items.draw(ventana)
     for event in pygame.event.get():
