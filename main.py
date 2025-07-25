@@ -1,9 +1,11 @@
-import pygame 
+import pygame
+import pygame.locals 
 import constantes
 from personaje import Personaje
 from weapon import Weapon
 from textos import DamageText
 from items import Item
+from mundo import Mundo  
 import os
 #Funciones
 #escalar imagen
@@ -73,6 +75,15 @@ imagen_pistola = escalar_img(imagen_pistola,constantes.SCALA_ARMA)
 #Balas
 imagen_balas = pygame.image.load(f"assets//images//weapons//bullet.png")
 imagen_balas = escalar_img(imagen_balas,constantes.SCALA_ARMA)
+
+#Cargar imagenes del mundo
+
+tile_list = []
+for x in range(constantes.TILE_TYPES):
+    tile_image = pygame.image.load(f"assets//images//tales//tales ({x+1}).png")
+    tile_image = pygame.transform.scale(tile_image,(constantes.TILE_SIZE,constantes.TILE_SIZE))
+    tile_list.append(tile_image)
+
 # Creacion del personaje principal 
 #player_image = pygame.image.load("assets//images//characters//player1//player0.png")
 #Tamaño del player alto y ancho
@@ -108,7 +119,40 @@ def vida_jugador():
             c_mitad_dibujado = True
         else:
             ventana.blit(corazon_vacio, (5+i*50,5))
-        
+
+
+world_data = [
+    [0,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,5],
+    [10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [10,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,15],
+    [20,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [20,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [20,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [20,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [20,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,25],
+    [30,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,35],
+    [30,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,35],
+    [30,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,35],
+    [30,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,35],
+    [30,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,35],
+    [40,41,42,43,44,41,42,43,44,41,42,43,44,41,42,43,44,41,42,43,45]
+]
+
+world = Mundo()
+world.process_data(world_data,tile_list)
+
+
+def dibujar_grid():
+    for x in range(30):
+        #Lineas verticales 
+        pygame.draw.line(ventana, constantes.BLANCO, (x*constantes.TILE_SIZE,0),(x*constantes.TILE_SIZE,constantes.ALTO_VENTANA))
+        #Lineas horizonatales 
+        pygame.draw.line(ventana, constantes.BLANCO, (0,x*constantes.TILE_SIZE),(constantes.ANCHO_VENTANA,x*constantes.TILE_SIZE))
+
+
+
 
 #Crear personaje de la clase personaje
 jugador = Personaje(50,50,animaciones, 20)
@@ -159,6 +203,8 @@ while run == True:
     reloj.tick(constantes.FPS)
     ventana.fill(constantes.COLOR_BG)
 
+    dibujar_grid()
+
     #Calcular el movimiento del juagador
     delta_x = 0
     delta_y = 0
@@ -196,6 +242,9 @@ while run == True:
 
     #Actualizar items
     grupo_items.update(jugador)
+
+    #Dibujar el mundo 
+    world.draw(ventana)
 
     #Dibujar al jugador 
     #print(f'{delta_x},{delta_y}')
